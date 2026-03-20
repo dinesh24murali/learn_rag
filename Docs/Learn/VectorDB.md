@@ -1,0 +1,11 @@
+# Vector DB
+
+Great question — this is where the "retrieval" in RAG actually lives.Let's start with the fundamental contrast — what each database is actually built to do:Now let's see how a vector DB actually stores and retrieves documents — you can add and search interactively:Click the query suggestions or type your own — watch the "Q" dot appear in the embedding space and pull the nearest document chunks toward it.
+
+**The fundamental difference.** A regular relational database (Postgres, MySQL, SQLite) stores rows and columns and answers questions like "give me all rows where `category = 'health'`". It excels at exact matches, joins, and structured data. A vector database stores embeddings — those high-dimensional number arrays — and answers a completely different question: "give me the N items whose vectors are most similar in direction to this query vector."
+
+**What's actually stored.** In a vector DB, each record typically holds three things: the embedding vector itself (e.g. 1536 floats for OpenAI's `text-embedding-3-small`), the original text of the chunk, and metadata (source filename, page number, date, etc.). That metadata is crucial — you can pre-filter by it before doing similarity search, which is much cheaper.
+
+**Why not just use Postgres?** You actually can — Postgres has a `pgvector` extension that adds vector search. For small datasets (under ~100k chunks) it works fine and is a great starting point. Dedicated vector databases like Chroma, Pinecone, and Weaviate add features optimized for very large scale: they use a special index structure called HNSW (Hierarchical Navigable Small World) that lets you search millions of vectors in milliseconds without comparing against every single one. Think of it like a skip list or a B-tree, but for geometric proximity in high dimensions.
+
+**For your RAG project,** start with Chroma — it runs locally, requires zero infrastructure, and has a simple Python API. Once you understand the pattern, you can swap in Pinecone or Weaviate if you need cloud hosting or larger scale. Ready to see how all of this comes together in a full RAG pipeline?
